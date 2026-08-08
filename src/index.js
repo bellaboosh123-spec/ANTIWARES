@@ -4,11 +4,10 @@ import { data as generateData, execute as generateExecute } from './commands/gen
 import express from 'express';
 import { getScript } from './services/supabase.js';
 
-// --- API ---
+// --- API (runs on port 3000) ---
 const app = express();
 app.use(express.json());
 
-// Test route to confirm API is running
 app.get('/test', (req, res) => {
   res.send('API is working!');
 });
@@ -18,9 +17,10 @@ app.get('/api/public/s/:id', async (req, res) => {
   const userAgent = req.headers['user-agent'] || '';
   console.log('User-Agent received:', userAgent);
 
-  if (!userAgent.includes('Roblox')) {
-    return res.status(404).send('-- script not found\n');
-  }
+  // Temporarily remove User-Agent check for testing
+  // if (!userAgent.includes('Roblox')) {
+  //   return res.status(404).send('-- script not found\n');
+  // }
 
   try {
     const script = await getScript(id);
@@ -31,10 +31,10 @@ app.get('/api/public/s/:id', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`API running on port ${PORT}`));
+const API_PORT = 3000;
+app.listen(API_PORT, () => console.log(`API running on port ${API_PORT}`));
 
-// --- BOT ---
+// --- BOT (runs on port 3001, but doesn't need a port) ---
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent],
 });
