@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "concurrently \"node src/index.js\" \"node src/api.js\""
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
     "@supabase/supabase-js": "^2.112.2",
     "discord.js": "^14.27.0",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "concurrently": "^8.2.2"
   }
 }

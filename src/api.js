@@ -9,7 +9,6 @@ app.get('/api/public/s/:id', async (req, res) => {
   const { id } = req.params;
   const userAgent = req.headers['user-agent'] || '';
 
-  // Block non-Roblox
   if (!userAgent.includes('Roblox')) {
     return res.status(404).send('-- script not found\n');
   }
@@ -23,7 +22,7 @@ app.get('/api/public/s/:id', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`API running on port ${PORT}`);
 });
