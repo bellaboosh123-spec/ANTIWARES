@@ -8,6 +8,11 @@ import { getScript } from './services/supabase.js';
 const app = express();
 app.use(express.json());
 
+// Test route to confirm API is running
+app.get('/test', (req, res) => {
+  res.send('API is working!');
+});
+
 app.get('/api/public/s/:id', async (req, res) => {
   const { id } = req.params;
   const userAgent = req.headers['user-agent'] || '';
