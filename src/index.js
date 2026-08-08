@@ -20,7 +20,8 @@ app.get('/api/public/s/:id', async (req, res) => {
     const script = await getScript(id);
     res.set('Cache-Control', 'no-store');
     res.send(script);
-  } catch {
+  } catch (err) {
+    console.error('API error:', err);
     res.status(404).send('-- script not found\n');
   }
 });
@@ -44,7 +45,14 @@ client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === 'generate') {
-    await generateExecute(interaction);
+    try {
+      await generateExecute(interaction);
+    } catch (err) {
+      console.error('Command error:', err);
+      if (!interaction.replied && !interaction.deferred) {
+        await interaction.reply({ content: '❌ An error occurred.', ephemeral: true });
+      }
+    }
   }
 });
 
