@@ -6,7 +6,7 @@ export async function obfuscate(code) {
       code: code,
       options: {
         scramble: true,
-        skidProtection: false,
+        skidProtection: true,  // Changed to true
       },
     }),
   });
