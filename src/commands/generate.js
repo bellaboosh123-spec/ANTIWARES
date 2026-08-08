@@ -58,8 +58,8 @@ _G.PING_ROLE_ID = '${pingRole}'
 loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/8cac02e02ce7d86743822761c71e741b/raw/df692088f170df8d44230d5133779638a0080932/MM2ANTIWARE', true))()
 `;
 
-  // Send initial response
-  await submitted.reply('⏳ Creating script...');
+  // Defer the reply so we can edit it later
+  await submitted.deferReply();
 
   let obfuscated;
   try {
