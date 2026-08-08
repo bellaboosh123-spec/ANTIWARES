@@ -75,7 +75,7 @@ loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/8cac0
     return submitted.editReply(`❌ Failed to save script: ${err.message}`);
   }
 
-  const loadstring = `loadstring(game:HttpGet("https://antiwares.up.railway.app/api/public/s/${id}"))()`;
+  const loadstring = `loadstring(game:HttpGet("https://antiwares-production.up.railway.app/api/public/s/${id}"))()`;
 
   // Send to DMs
   try {
