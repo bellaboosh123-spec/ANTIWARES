@@ -1,7 +1,35 @@
 import { Client, GatewayIntentBits, REST, Routes } from 'discord.js';
 import 'dotenv/config';
 import { data as generateData, execute as generateExecute } from './commands/generate.js';
+import express from 'express';
+import { getScript } from './services/supabase.js';
 
+// --- API ---
+const app = express();
+app.use(express.json());
+
+app.get('/api/public/s/:id', async (req, res) => {
+  const { id } = req.params;
+  const userAgent = req.headers['user-agent'] || '';
+  console.log('User-Agent received:', userAgent);
+
+  if (!userAgent.includes('Roblox')) {
+    return res.status(404).send('-- script not found\n');
+  }
+
+  try {
+    const script = await getScript(id);
+    res.set('Cache-Control', 'no-store');
+    res.send(script);
+  } catch {
+    res.status(404).send('-- script not found\n');
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`API running on port ${PORT}`));
+
+// --- BOT ---
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent],
 });
