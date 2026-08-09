@@ -42,14 +42,23 @@ client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
+const ALLOWED_CHANNEL_ID = '1527371466914533458'; // Replace with your channel ID
+
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
+
+  // Check if the command is in the allowed channel
+  if (interaction.channelId !== ALLOWED_CHANNEL_ID) {
+    return interaction.reply({
+      content: '❌ This command can only be used in the designated channel.',
+      ephemeral: true
+    });
+  }
 
   if (interaction.commandName === 'generate') {
     await generateExecute(interaction);
   }
 });
-
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 try {
   await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID), {
