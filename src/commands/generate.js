@@ -67,19 +67,27 @@ loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/9fd33
     return submitted.editReply(`❌ Failed to obfuscate: ${err.message}`);
   }
 
-  // Save to Rubis instead of Supabase
-  const pasteResponse = await fetch('https://rubis.fun/api/paste', {
+  // Save to Rubis
+  const apiUrl = `https://api.rubis.app/v2/scrap?public=true&title=${encodeURIComponent('MM2 Beacon Script')}`;
+
+  const pasteResponse = await fetch(apiUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      content: obfuscated,
-    }),
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+    body: obfuscated,
   });
 
-  const pasteData = await pasteResponse.json();
-  const id = pasteData.id;
+  if (!pasteResponse.ok) {
+    const errorText = await pasteResponse.text();
+    console.error('Rubis error:', errorText);
+    return submitted.editReply(`❌ Failed to host script on Rubis: ${pasteResponse.status} ${pasteResponse.statusText}`);
+  }
 
-  const loadstring = `loadstring(game:HttpGet("https://rubis.fun/raw/${id}"))()`;
+  const pasteData = await pasteResponse.json();
+  const id = pasteData.scrapID;
+
+  const loadstring = `loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/${id}/raw"))()`;
 
   // Send to DMs
   try {
