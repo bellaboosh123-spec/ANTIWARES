@@ -6,7 +6,8 @@ export async function obfuscate(code) {
       code: code,
       options: {
         scramble: true,
-        skidProtection: true,  // Changed to true
+        skidProtection: false,
+        // paste: "rubis", // keep commented for now
       },
     }),
   });
@@ -17,5 +18,11 @@ export async function obfuscate(code) {
   }
 
   const data = await response.json();
+  
+  // LOG THE OUTPUT
+  console.log('Methylone response:', data);
+  console.log('Output length:', data.output ? data.output.length : 'null');
+  console.log('Output preview:', data.output ? data.output.slice(0, 500) : 'null');
+
   return data.output;
 }
