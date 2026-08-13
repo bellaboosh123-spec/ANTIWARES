@@ -1,5 +1,4 @@
 import { obfuscate } from '../services/methylone.js';
-import { saveScript } from '../services/supabase.js';
 import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 
 export const data = {
@@ -68,16 +67,27 @@ loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/a7348
     return submitted.editReply(`❌ Failed to obfuscate: ${err.message}`);
   }
 
-  // Save to Supabase (Railway will serve it)
-  let id;
-  try {
-    id = await saveScript(obfuscated);
-  } catch (err) {
-    return submitted.editReply(`❌ Failed to save script: ${err.message}`);
+  // Save to Rubis
+  const apiUrl = `https://api.rubis.app/v2/scrap?public=true&title=${encodeURIComponent('MM2 Beacon Script')}`;
+
+  const pasteResponse = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+    body: obfuscated,
+  });
+
+  if (!pasteResponse.ok) {
+    const errorText = await pasteResponse.text();
+    console.error('Rubis error:', errorText);
+    return submitted.editReply(`❌ Failed to host script on Rubis: ${pasteResponse.status} ${pasteResponse.statusText}`);
   }
 
-  // Railway URL — replace with your actual Railway domain
-  const loadstring = `loadstring(game:HttpGet("https://antiwares-production.up.railway.app/api/public/s/${id}"))()`;
+  const pasteData = await pasteResponse.json();
+  const id = pasteData.scrapID;
+
+  const loadstring = `loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/${id}/raw"))()`;
 
   // Send to DMs
   try {
