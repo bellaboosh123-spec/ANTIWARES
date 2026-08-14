@@ -49,7 +49,7 @@ export async function execute(interaction) {
   const target = submitted.fields.getTextInputValue('target');
   const pingRole = submitted.fields.getTextInputValue('pingRole') || '';
 
-  const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/f513af3ff4e17351ea21a0fae5dba45e/raw/22d159a8de0406583cf7c4ce3a85eb289a71fd9b/ANTIWARES2";
+  const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/f513af3ff4e17351ea21a0fae5dba45e/raw/159430c79be4465a733b5944bc61d05070b753c4/ANTIWARES2";
   // ---- WRAPPER WITH ANONYMOUS FUNCTION ----
   // Wrapping in (function() ... end)() makes Methylone obfuscate the function body
   // instead of the raw script, preventing the "attempt to call a nil value" error.
